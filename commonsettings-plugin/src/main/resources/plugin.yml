@@ -1,0 +1,4 @@
+name: CommonSettings
+author: CubBossa
+main: de.cubbossa.commonsettings.plugin.CommonSettingsPlugin
+version: 1.0
