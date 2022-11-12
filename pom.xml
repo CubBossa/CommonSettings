@@ -7,11 +7,12 @@
     <groupId>de.cubbossa</groupId>
     <artifactId>commonsettings</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <modules>
         <module>commonsettings-api</module>
         <module>commonsettings-plugin</module>
+        <module>commonsettings-example</module>
     </modules>
 
     <properties>

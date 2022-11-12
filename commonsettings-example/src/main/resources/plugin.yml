@@ -1,0 +1,5 @@
+name: CommonSettingsExample
+author: CubBossa
+main: de.cubbossa.commonsettings.example.ExamplePlugin
+version: 1.0
+softdepend: [ CommonSettings ]

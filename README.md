@@ -16,7 +16,23 @@ Plugins register settings, other plugins use settings without dealing with other
 
 ## Installation
 
-// TODO
+```Xml
+<repositories>
+    <repository>
+        <id>cubbossa</id>
+        <url>https://nexus.leonardbausenwein.de/repository/maven-public</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+        <groupId>de.cubbossa</groupId>
+        <artifactId>commonsettings-api</artifactId>
+        <version>1.0</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
+```
 
 ## How to Use
 
@@ -27,10 +43,16 @@ If your server has player settings, you can easily register them to CommonSettin
 First, you may want to make sure that CommonSettings is a soft depend, meaning that your plugin
 also runs without.
 
+```yml
+# in plugin.yml
+softdepend: [CommonSettings]
+```
+
 ```Java
 class MyPlugin {
 	void onEnable() {
-		if (getPlugin("CommonSettings") != null) {
+		// Check if the plugin is installed, otherwise you will run into ClassNotFound errors.
+		if (Bukkit.getPluginManager().getPlugin("CommonSettings") != null) {
 			new Tutorial().register();
 		}
 	}
@@ -52,8 +74,10 @@ class Tutorial {
 		// The type matches the getter and setter value, this might be a boolean or enum, in this case a Material.
 		// The NamespacedKey is necessary to identify your setting among others.
 		SettingsAPI.getInstance().registerSetting(new SettingBuilder<>(Material.class, NamespacedKey.fromString("tutorial:material"))
-				// set the title
+				// set the title with
 				.withTitle("My Setting")
+                // or
+				.withTitle(Component.text("My Setting"))
 				// Set a short and long description
 				.withDescription("Just an example", "This is just an example to explain the usage of the SettingsBuilder class.")
 				// Set tags to sort your setting into categories

@@ -9,11 +9,15 @@ import lombok.RequiredArgsConstructor;
  * The key serves as an identifier. So a plugin that registers a setting would use its name + setting name, e.g. PlotSquared:plots.toggle.chat
  */
 @Getter
-@RequiredArgsConstructor
 public class NamespacedKey {
 
 	private final String namespace;
 	private final String key;
+
+	public NamespacedKey(String namespace, String key) {
+		this.namespace = namespace.toLowerCase();
+		this.key = key.toLowerCase();
+	}
 
 	@Override
 	public int hashCode() {
