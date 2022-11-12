@@ -103,7 +103,10 @@ class Tutorial {
 
 ### Using Other Plugins Settings
 
+First of all, make sure that CommonSettings is installed and listed as dependency in your plugins.yml.
+
 To use a setting that was registered by another plugin, you have to search it by its NamespacedKey.
+You can also search settings by type, plugin and tags. 
 
 ```Java
 class Tutorial {

@@ -58,6 +58,36 @@ public class SettingsAPI {
 		return settings;
 	}
 
+	public List<Setting<?>> getSettingsWithTag(String tag) {
+		List<Setting<?>> settings = new ArrayList<>();
+		for (Setting<?> setting : registeredSettings.values()) {
+			if (setting.getTags().contains(tag)) {
+				settings.add(setting);
+			}
+		}
+		return settings;
+	}
+
+	public List<Setting<?>> getSettingsWithAllTags(Collection<String> tags) {
+		List<Setting<?>> settings = new ArrayList<>();
+		for (Setting<?> setting : registeredSettings.values()) {
+			if (setting.getTags().containsAll(tags)) {
+				settings.add(setting);
+			}
+		}
+		return settings;
+	}
+
+	public List<Setting<?>> getSettingsWithSomeTags(Collection<String> tags) {
+		List<Setting<?>> settings = new ArrayList<>();
+		for (Setting<?> setting : registeredSettings.values()) {
+			if (setting.getTags().stream().anyMatch(tags::contains)) {
+				settings.add(setting);
+			}
+		}
+		return settings;
+	}
+
 	public <T> Setting<T> getSetting(String plugin, String key) {
 		return getSetting(new NamespacedKey(plugin, key));
 	}
