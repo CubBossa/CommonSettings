@@ -12,7 +12,7 @@ To use a convention for settings is a huge help to server administrators that wa
 one clean way to manage their settings. No need to make GUIs which run "/p toggle titles" as command but cannot
 visualize the actual value of the setting. No need to have every single plugin with playersettings as dependency.
 
-Plugins register settings, other plugins use settings without dealing with other plugins code :D
+Plugins register settings, consumer plugins use settings without dealing with provider plugins code :D
 
 ## Installation
 
