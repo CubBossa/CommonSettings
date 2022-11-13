@@ -6,6 +6,7 @@ import dev.jorel.commandapi.CommandTree;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.IntegerArgument;
 import dev.jorel.commandapi.arguments.LiteralArgument;
+import dev.jorel.commandapi.arguments.PlayerArgument;
 
 import java.util.Map;
 import java.util.UUID;
@@ -43,24 +44,11 @@ public class CommonSettingsCommand {
 			}
 	);
 
-	private static <T> T getEnumValue(Setting<T> setting, String input) {
-		if (!setting.getType().isEnum()) {
-			throw new SettingValueParseException();
-		}
-		try {
-			return (T) setting.getType().getDeclaredMethod("valueOf", String.class).invoke(null, input);
-		} catch (Throwable t) {
-			throw new SettingValueParseException();
-		}
-	}
-
 	public CommonSettingsCommand() {
 		new CommandTree("commonsettings")
 				.withAliases("csettings", "cset")
-				.executes((commandSender, objects) -> {
-
-				})
 				.then(new LiteralArgument("list")
+						.withPermission("commonsettings.command.list")
 						.executes((commandSender, objects) -> {
 							SettingsAPI.getInstance().getSettings().forEach(setting -> commandSender.sendMessage(setting.getKey().toString()));
 						})
@@ -69,21 +57,27 @@ public class CommonSettingsCommand {
 						}))
 				)
 				.then(new LiteralArgument("info")
-						.executes((commandSender, objects) -> {
-						})
+						.withPermission("commonsettings.command.info")
 						.then(new SettingsArgument("setting").executesPlayer((player, objects) -> {
 							player.sendMessage(((Setting<?>) objects[0]).getValue(player.getUniqueId()).toString());
 						}))
 				)
 				.then(new LiteralArgument("set")
-						.executes((commandSender, objects) -> {
+						.withPermission("commonsettings.command.set.self")
+						.then(new SettingsArgument("setting")
+								.then(new GreedyStringArgument("value").executesPlayer((player, objects) -> {
+									handleSet((Setting<?>) objects[0], player.getUniqueId(), (String) objects[1]);
+								}))
+								.then(new PlayerArgument("target")
+										.withPermission("commonsettings.command.set.other")
+										.then(new GreedyStringArgument("value").executesPlayer((player, objects) -> {
 
-						})
-						.then(new SettingsArgument("setting").then(new GreedyStringArgument("value").executesPlayer((player, objects) -> {
-							handleSet((Setting<?>) objects[0], player.getUniqueId(), (String) objects[1]);
-						})))
+										}))
+								)
+						)
 				)
-				.register();
+				//.register()
+		;
 	}
 
 	private <T> void handleSet(Setting<T> setting, UUID uuid, String value) {
@@ -107,6 +101,17 @@ public class CommonSettingsCommand {
 			});
 		}
 		return parser.parse(setting, input);
+	}
+
+	private static <T> T getEnumValue(Setting<T> setting, String input) {
+		if (!setting.getType().isEnum()) {
+			throw new SettingValueParseException();
+		}
+		try {
+			return (T) setting.getType().getDeclaredMethod("valueOf", String.class).invoke(null, input);
+		} catch (Throwable t) {
+			throw new SettingValueParseException();
+		}
 	}
 
 	private interface Parser<T> {
